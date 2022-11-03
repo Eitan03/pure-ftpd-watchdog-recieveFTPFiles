@@ -3,7 +3,7 @@ import unittest
 from Utils.FileNameUtilFunctions import *
 
 
-class TestFielNameUtilFunctions(unittest.TestCase):
+class TestFileNameUtilFunctions(unittest.TestCase):
 
 	# getFileExtension
 
