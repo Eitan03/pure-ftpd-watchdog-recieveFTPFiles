@@ -33,11 +33,12 @@ def processNewFile(filePath: str, processFileName: FunctionType, DatabaseFactory
     file_name, file_type, file_part_idx = processFileName(filePath)
 
 
-    if (not db.exists(file_name)) or db.lenOfHash(file_name) < (AMOUNT_OF_FILE_PARTS - 2):
+    if (not db.exists(file_name)) or (int(db.getHashValue(file_name, 'amount_of_parts')) < (AMOUNT_OF_FILE_PARTS - 1)):
         if file_type != None:
             db.setHashValue(file_name, 'type', file_type)
         
         db.setHashValue(file_name, str(file_part_idx), filePath)
+        db.incrementHashValueBy(file_name, 'amount_of_parts', 1)
 
         return file_name, False
     else:

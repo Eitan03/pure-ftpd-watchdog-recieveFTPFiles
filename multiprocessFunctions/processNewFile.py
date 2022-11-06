@@ -21,3 +21,5 @@ def onExpiration(processFileOutput):
 def processNewFile(newFilePath): 
     return pool.apply_async(processNewFileSync, [newFilePath, processFilePath, RedisDB, createElasticLogger, sendFileToServer], callback=onExpiration)
     # return processNewFileSync( newFilePath, processFilePath, RedisDB, createElasticLogger, sendFileToServer )
+    #output = processNewFileSync(newFilePath, processFilePath, RedisDB, createElasticLogger, sendFileToServer)
+    #onExpiration(output)

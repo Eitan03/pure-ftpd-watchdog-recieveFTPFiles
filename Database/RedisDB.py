@@ -9,9 +9,16 @@ class RedisDB():
     def setHashValue(self, hashName, key, value):
         log(f'REDIS: saved ({key}: {value}) into hash {hashName}')
         return self.__redis.hset(hashName, key, value)
+    
+    def incrementHashValueBy(self, hashName, key, amount=1):
+        log(f'REDIS: incremented {key} by {amount} of hash {hashName}')
+        return self.__redis.hincrby(hashName, key, amount)
 
     def getHash(self, key):
         return self.__redis.hgetall(key)
+    
+    def getHashValue(self, hashName, key):
+        return self.__redis.hget(hashName, key)
     
     def delete(self, hashName):
         return self.__redis.delete(hashName)
