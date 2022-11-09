@@ -3,17 +3,16 @@ import requests
 from os import remove as deleteFile
 
 from config import MY_IP, SERVER_NAME
-from Database.LocalJSONLogger import LocalJSONLogger
 
-def sendFileToServer(file_name, logger: LocalJSONLogger, *file_parts_path):
+def sendFileToServer(file_name, logger, *file_parts_path):
     try:
         
-        fileParts = []
+        file_parts = []
         for part_path in file_parts_path:
             with open(part_path, 'rb') as f:
-                    fileParts.append(('fileParts', f.read()))
+                    file_parts.append(('fileParts', f.read()))
 
-        res = requests.post(SERVER_NAME, data={ "fileName": file_name}, files=fileParts)
+        res = requests.post(SERVER_NAME, data={ "fileName": file_name}, files=file_parts)
         
         for file in file_parts_path:
             deleteFile(file)

@@ -1,5 +1,7 @@
-def processFilePath(filePath: str):
-    file_name = filePath.rpartition('/')[2]
+import os
+
+def processFilePath(file_path: str):
+    file_name = os.path.split(file_path)[1]
     file_name, file_extension = getFileExtension(file_name)
     file_name, file_part_idx = getFilePartIdx(file_name)
     return file_name, file_extension, file_part_idx

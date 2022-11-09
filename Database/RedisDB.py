@@ -5,28 +5,28 @@ class RedisDB():
     def __init__(self):
         self.__redis = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
-    def setSetValue(self, setName, *values):
-        return self.__redis.sadd(setName, *values)
+    def setSetValue(self, set_name, *values):
+        return self.__redis.sadd(set_name, *values)
 
     def removeSetValue(self, setName, *values):
         return self.__redis.srem(setName, *values)
     
-    def setHashValue(self, hashName, key, value):
-        print(f'REDIS: saved ({key}: {value}) into hash {hashName}')
-        return self.__redis.hset(hashName, key, value)
+    def setHashValue(self, hash_name, key, value):
+        print(f'REDIS: saved ({key}: {value}) into hash {hash_name}')
+        return self.__redis.hset(hash_name, key, value)
     
-    def incrementHashValueBy(self, hashName, key, amount=1):
-        print(f'REDIS: incremented {key} by {amount} of hash {hashName}')
-        return self.__redis.hincrby(hashName, key, amount)
+    def incrementHashValueBy(self, hash_name, key, amount=1):
+        print(f'REDIS: incremented {key} by {amount} of hash {hash_name}')
+        return self.__redis.hincrby(hash_name, key, amount)
 
     def getHash(self, key):
         return self.__redis.hgetall(key)
     
-    def getHashValue(self, hashName, key):
-        return self.__redis.hget(hashName, key)
+    def getHashValue(self, hash_name, key):
+        return self.__redis.hget(hash_name, key)
     
-    def delete(self, hashName):
-        return self.__redis.delete(hashName)
+    def delete(self, hash_name):
+        return self.__redis.delete(hash_name)
 
     def exists(self, key):
         return self.__redis.exists(key)

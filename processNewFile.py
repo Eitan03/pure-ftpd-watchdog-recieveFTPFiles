@@ -6,7 +6,7 @@ from types import FunctionType
 from config import AMOUNT_OF_FILE_PARTS, MY_IP, REDIS_IMAGES_PROCESSED_NAME
 
 
-def processNewFile(filePath: str, processFileName: FunctionType, DatabaseFactory, loggerFactory,sendFile: FunctionType):
+def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactory, loggerFactory,sendFile: FunctionType):
     """_summary_
 
     Args:
@@ -27,13 +27,13 @@ def processNewFile(filePath: str, processFileName: FunctionType, DatabaseFactory
     logger = loggerFactory()
 
     try:
-        print(f'got new file {filePath}')
+        print(f'got new file {file_path}')
         logger.log('received-file-parts',
-           { 'fileName': filePath, 'receiver': MY_IP})
+           { 'fileName': file_path, 'receiver': MY_IP})
     except Exception as e:
         print('got error')
         raise e
-    file_name, file_type, file_part_idx = processFileName(filePath)
+    file_name, file_type, file_part_idx = processFileName(file_path)
 
 
     while (db.setSetValue(REDIS_IMAGES_PROCESSED_NAME, file_name) == 0):
@@ -47,7 +47,7 @@ def processNewFile(filePath: str, processFileName: FunctionType, DatabaseFactory
             if file_type != None:
                 db.setHashValue(file_name, 'type', file_type)
 
-            db.setHashValue(file_name, str(file_part_idx), filePath)
+            db.setHashValue(file_name, str(file_part_idx), file_path)
             db.incrementHashValueBy(file_name, 'amount_of_parts', 1)
 
             return file_name, False
@@ -55,7 +55,7 @@ def processNewFile(filePath: str, processFileName: FunctionType, DatabaseFactory
             file_data: list = db.getHash(file_name)
             if file_type is None: file_type = file_data['type']
 
-            file_data[str(file_part_idx)] = filePath
+            file_data[str(file_part_idx)] = file_path
 
             sendFile( file_name + "." + file_type, logger, *[file_data[str(i)] for i in range(AMOUNT_OF_FILE_PARTS)])
             db.delete(file_name)

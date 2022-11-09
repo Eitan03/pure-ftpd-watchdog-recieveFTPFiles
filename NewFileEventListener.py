@@ -5,7 +5,7 @@ class NewFileListener():
     """
         a Basic File listener that uses the watchdog library
     """
-    def __init__(self, folderPath, onNewFileFunc):
+    def __init__(self, folder_path, onNewFileFunc):
         """_summary_
 
         Args:
@@ -14,7 +14,7 @@ class NewFileListener():
         """
 
         self.__observer = Observer()
-        self.__observer.schedule(NewFileEventHandler(onNewFileFunc), folderPath, recursive=False)
+        self.__observer.schedule(NewFileEventHandler(onNewFileFunc), folder_path, recursive=False)
     
     def start_listenning(self):
         self.__observer.start()
