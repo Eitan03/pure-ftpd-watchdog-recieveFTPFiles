@@ -13,5 +13,7 @@ def createDatabaseMock(database: dict):
     		'lenOfHash': Mock(return_value=0),
     		'flushAll': Mock(return_value=True),
 			'incrementHashValueBy': Mock(return_value=True),
-			'getHashValue': Mock(return_value=100)
+			'getHashValue': Mock(return_value=100),
+			'setSetValue': Mock(return_value=1),
+			'removeSetValue': Mock(return_value=1)
 		}, **database })
