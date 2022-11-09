@@ -1,9 +1,9 @@
 from datetime import datetime
+from time import sleep
 from Utils.FileNameUtilFunctions import *
 from types import FunctionType
 
-from Utils.log import log
-from config import AMOUNT_OF_FILE_PARTS, MY_IP
+from config import AMOUNT_OF_FILE_PARTS, MY_IP, REDIS_IMAGES_PROCESSED_NAME
 
 
 def processNewFile(filePath: str, processFileName: FunctionType, DatabaseFactory, loggerFactory,sendFile: FunctionType):
@@ -26,26 +26,39 @@ def processNewFile(filePath: str, processFileName: FunctionType, DatabaseFactory
     db = DatabaseFactory()
     logger = loggerFactory()
 
-    log(f'got new file {filePath}')
-    logger.log('received-file-parts',
-           {'@timestamp': datetime.now(), 'fileName': filePath, 'receiver': MY_IP})
-
+    try:
+        print(f'got new file {filePath}')
+        logger.log('received-file-parts',
+           { 'fileName': filePath, 'receiver': MY_IP})
+    except Exception as e:
+        print('got error')
+        raise e
     file_name, file_type, file_part_idx = processFileName(filePath)
 
+    while (db.setSetValue(REDIS_IMAGES_PROCESSED_NAME, file_name) == 0):
+        print(f'waiting with file {file_name} and part {file_part_idx}')
+        sleep(0.5)
+    # TODO maybe go to another image and return to this one?
+    # maybe by openning and closing the file so a watchdog event is triggered
 
-    if (not db.exists(file_name)) or db.lenOfHash(file_name) < (AMOUNT_OF_FILE_PARTS):
-        if file_type != None:
-            db.setHashValue(file_name, 'type', file_type)
-        
-        db.setHashValue(file_name, str(file_part_idx), filePath)
+    try:
+        if (not db.exists(file_name)) or (int(db.getHashValue(file_name, 'amount_of_parts')) < (AMOUNT_OF_FILE_PARTS - 1)):
+            if file_type != None:
+                db.setHashValue(file_name, 'type', file_type)
 
-        return file_name, False
-    else:
-        file_data: list = db.getHash(file_name)
-        if file_type is None: file_type = file_data['type']
+            db.setHashValue(file_name, str(file_part_idx), filePath)
+            db.incrementHashValueBy(file_name, 'amount_of_parts', 1)
 
-        file_data[str(file_part_idx)] = filePath
+            return file_name, False
+        else:
+            file_data: list = db.getHash(file_name)
+            if file_type is None: file_type = file_data['type']
 
-        sendFile( file_name + "." + file_type, logger, *[file_data[str(i)] for i in range(AMOUNT_OF_FILE_PARTS)])
-        db.delete(file_name)
-        return file_name, True
+            file_data[str(file_part_idx)] = filePath
+
+            sendFile( file_name + "." + file_type, logger, *[file_data[str(i)] for i in range(AMOUNT_OF_FILE_PARTS)])
+            db.delete(file_name)
+            return file_name, True
+    finally:
+        print(f'deleting for set {file_name}')
+        db.removeSetValue(REDIS_IMAGES_PROCESSED_NAME, file_name)
