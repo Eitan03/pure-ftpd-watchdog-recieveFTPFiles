@@ -35,7 +35,6 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
         raise e
     file_name, file_type, file_part_idx = processFileName(file_path)
 
-
     while (db.setSetValue(REDIS_IMAGES_PROCESSED_NAME, file_name) == 0):
         print(f'waiting with file {file_name} and part {file_part_idx}')
         sleep(0.5)

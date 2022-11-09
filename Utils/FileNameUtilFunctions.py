@@ -9,7 +9,7 @@ def processFilePath(file_path: str):
 
 def getFileExtension(file_name: str):
     if '.' in file_name:
-        return file_name.split('.', 1)
+        return tuple(file_name.split('.', 1))
     return file_name, None
 
 def getFilePartIdx(file_name: str):
