@@ -1,9 +1,9 @@
 import threading
 
+from Database.LocalJSONLogger import LocalJSONLogger
 from Utils.FileNameUtilFunctions import processFilePath
 from SendFileToServer import sendFileToServer
 from config import SEC_BEFORE_FILE_EXPIRATION
-from multiprocessFunctions.createLocalJSONLogger import createLocalJSONLogger
 from multiprocessFunctions.fileExpired import fileExpired
 from processNewFile import processNewFile as processNewFileSync
 from Database.RedisDB import RedisDB
@@ -21,7 +21,7 @@ def onError(e):
     print(e)
 
 def processNewFile(newFilePath): 
-    return pool.apply_async(processNewFileSync, [newFilePath, processFilePath, RedisDB, createLocalJSONLogger, sendFileToServer], callback=onExpiration, error_callback=onError)
+    return pool.apply_async(processNewFileSync, [newFilePath, processFilePath, RedisDB, LocalJSONLogger, sendFileToServer], callback=onExpiration, error_callback=onError)
     # return processNewFileSync( newFilePath, processFilePath, RedisDB, createLocalJSONLogger, sendFileToServer )
     #output = processNewFileSync(newFilePath, processFilePath, RedisDB, createLocalJSONLogger, sendFileToServer)
     #onExpiration(output)
