@@ -1,10 +1,13 @@
 from datetime import datetime
 import json
+import logging
 import os
 
-from Database.Logger import Logger
+from Communication.BaseCommunicator import BaseCommunicator
 
-class LocalJSONLogger(Logger):
+logger = logging.getLogger('')
+
+class LocalJSONCommunicator(BaseCommunicator):
 	def	__init__(self, baseDir):
 		self.baseDir = baseDir
 
@@ -14,9 +17,9 @@ class LocalJSONLogger(Logger):
 		folder = os.path.join(self.baseDir,index_name)
 
 		if not os.path.exists(folder):
-			print(f'creating folder {folder}')
+			logger.info(f'creating folder {folder}')
 			os.mkdir(folder)
 		with open(os.path.join(folder, f'{index_name}-{datetime.now().strftime("%x - %H")}.json'), 'a') as f:
 			data = json.dumps(doc)
 			f.write(data + '\n')
-		print(f'logged to elastic in index {index_name}')
+		logger.info(f'logged to elastic in index {index_name}')

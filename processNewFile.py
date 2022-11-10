@@ -1,12 +1,14 @@
 from datetime import datetime
+import logging
 from time import sleep
 from Utils.FileNameUtilFunctions import *
 from types import FunctionType
 
 from config import AMOUNT_OF_FILE_PARTS, MY_IP, REDIS_IMAGES_PROCESSED_NAME
 
+logger = logging.getLogger()
 
-def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactory, loggerFactory, sendFile: FunctionType):
+def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactory, communicatorFactory, sendFile: FunctionType):
     """_summary_
 
     Args:
@@ -16,7 +18,7 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
         
         DatabaseFactory ( () ): a function to initialize a database object that contains the functions to get/set database  key/value pairs
         
-        loggerFactory( () ): a function to initialize a logger object that contain a function to log events to
+        communicatorFactory( () ): a function to initialize a communicator object that contain a function to log events to
 
         sendFile ( (fileName: str, *filePartsPath) -> None ): a function that accepts a file name and a list of its parts path and send it to further processing
     
@@ -24,19 +26,18 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
         file_name, didSendFile
     """
     db = DatabaseFactory()
-    logger = loggerFactory()
+    communicator = communicatorFactory()
 
     try:
-        print(f'got new file {file_path}')
-        logger.log('received-file-parts',
+        logger.info(f'got new file {file_path}')
+        communicator.log('received-file-parts',
            { 'fileName': file_path, 'receiver': MY_IP})
     except Exception as e:
-        print('got error')
-        raise e
+        logger.error(f'got an error: {e}')
     file_name, file_type, file_part_idx = processFileName(file_path)
 
     while (db.setSetValue(REDIS_IMAGES_PROCESSED_NAME, file_name) == 0):
-        print(f'waiting with file {file_name} and part {file_part_idx}')
+        logger.info(f'waiting with file {file_name} and part {file_part_idx}')
         sleep(0.5)
     # TODO maybe go to another image and return to this one?
     # maybe by openning and closing the file so a watchdog event is triggered
@@ -56,9 +57,9 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
 
             file_data[str(file_part_idx)] = file_path
 
-            sendFile( file_name + "." + file_type, logger, *[file_data[str(i)] for i in range(AMOUNT_OF_FILE_PARTS)])
+            sendFile( file_name + "." + file_type, communicator, *[file_data[str(i)] for i in range(AMOUNT_OF_FILE_PARTS)])
             db.delete(file_name)
             return file_name, True
     finally:
-        print(f'deleting for set {file_name}')
+        logger.info(f'deleting for set {file_name}')
         db.removeSetValue(REDIS_IMAGES_PROCESSED_NAME, file_name)

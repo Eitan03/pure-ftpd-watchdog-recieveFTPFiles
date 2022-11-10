@@ -1,6 +1,6 @@
 from abc import	ABC, abstractmethod
 
-class Databse(ABC):
+class BaseDatabse(ABC):
 
 	@abstractmethod
 	def	setSetValue(self, set_name,	*values):

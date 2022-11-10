@@ -2,10 +2,10 @@ from processNewFile import *
 
 from unittest.mock import Mock, ANY
 
-from .LoggerMock import createLoggerMock
+from .CommunicatorMock import createCommunicatorMock
 from .DatabaseMock import createDatabaseMock
 
-def createEmptyProcessNewFile(filePath = '', processFileName = Mock(return_value=('', None, 0)), database = {}, logger = {},sendFile = Mock(return_value=True)):
+def createEmptyProcessNewFile(filePath = '', processFileName = Mock(return_value=('', None, 0)), database = {}, communicator = {},sendFile = Mock(return_value=True)):
 
 	class DynamicObject():
 		def __init__(self, dictionary: dict):
@@ -14,7 +14,7 @@ def createEmptyProcessNewFile(filePath = '', processFileName = Mock(return_value
 	def DatabaseFactory(): 
 			return createDatabaseMock(database)
 	
-	def loggerFactory():
-		return createLoggerMock(logger)
+	def communicatorFactory():
+		return createCommunicatorMock(communicator)
 
-	return processNewFile(filePath, processFileName, DatabaseFactory, loggerFactory, sendFile)
+	return processNewFile(filePath, processFileName, DatabaseFactory, communicatorFactory, sendFile)

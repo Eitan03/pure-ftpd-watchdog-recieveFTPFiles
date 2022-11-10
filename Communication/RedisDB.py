@@ -1,9 +1,11 @@
+import logging
 import redis
 
-from Database.Database import Databse
+from Communication.BaseDatabase import BaseDatabse
 
+logger = logging.getLogger('')
 
-class RedisDB(Databse):
+class RedisDB(BaseDatabse):
     def __init__(self):
         self.__redis = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
@@ -14,11 +16,11 @@ class RedisDB(Databse):
         return self.__redis.srem(setName, *values)
     
     def setHashValue(self, hash_name, key, value):
-        print(f'REDIS: saved ({key}: {value}) into hash {hash_name}')
+        logger.info(f'REDIS: saved ({key}: {value}) into hash {hash_name}')
         return self.__redis.hset(hash_name, key, value)
     
     def incrementHashValueBy(self, hash_name, key, amount=1):
-        print(f'REDIS: incremented {key} by {amount} of hash {hash_name}')
+        logger.info(f'REDIS: incremented {key} by {amount} of hash {hash_name}')
         return self.__redis.hincrby(hash_name, key, amount)
 
     def getHash(self, key):
