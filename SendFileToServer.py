@@ -23,8 +23,9 @@ def sendFileToServer(file_name, communicator, *file_parts_path):
         logger.info(f'REQUESTS: sent file {file_name} with {len(file_parts_path)} parts to server with response code of {res.status_code}')
         communicator.log('sent-files',
                {'fileName': file_name, 'sender': MY_IP, 'response': res.status_code})
-        if (resJson := res.json()):
-            logger.info(f'response body: {resJson}')
+        if (res.text):
+            logger.info(f'response body: {res.content}')
     
     except Exception as e:
         logger.error(f'recieve an error when sending files! {e}')
+        logger.info(f'recieve an error when sending files! {e}', exc_info=True)

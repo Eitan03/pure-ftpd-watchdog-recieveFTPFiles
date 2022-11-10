@@ -1,4 +1,6 @@
 
 from multiprocessing import Pool
 
-pool = Pool()
+from Communication.Logger import initLogger
+
+pool = Pool(initializer=initLogger)

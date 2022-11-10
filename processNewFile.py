@@ -6,7 +6,7 @@ from types import FunctionType
 
 from config import AMOUNT_OF_FILE_PARTS, MY_IP, REDIS_IMAGES_PROCESSED_NAME
 
-logger = logging.getLogger()
+logger = logging.getLogger('')
 
 def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactory, communicatorFactory, sendFile: FunctionType):
     """_summary_
@@ -34,6 +34,7 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
            { 'fileName': file_path, 'receiver': MY_IP})
     except Exception as e:
         logger.error(f'got an error: {e}')
+        logger.info(f'got an error: {e}', exc_info=True)
     file_name, file_type, file_part_idx = processFileName(file_path)
 
     while (db.setSetValue(REDIS_IMAGES_PROCESSED_NAME, file_name) == 0):
