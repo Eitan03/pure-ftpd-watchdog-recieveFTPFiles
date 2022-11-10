@@ -1,5 +1,6 @@
 import logging
 import threading
+import traceback
 
 from Utils.FileNameUtilFunctions import processFilePath
 from SendFileToServer import sendFileToServer
@@ -18,8 +19,9 @@ def onExpiration(processFile_output):
         logger.info(f'started timer for {file_name}')
         threading.Timer(SEC_BEFORE_FILE_EXPIRATION, fileExpired, [file_name, RedisDB]).start()
 
-def onError(e):
+def onError(e: Exception):
     logger.error(f'got error in process! {e}')
+    print('\n'.join(traceback.format_exception(type(e), e, e.__traceback__)))
 
 def processNewFile(new_file_path): 
     return pool.apply_async(processNewFileSync, [new_file_path, processFilePath, RedisDB, createLocalJSONCommunicator, sendFileToServer], callback=onExpiration, error_callback=onError)

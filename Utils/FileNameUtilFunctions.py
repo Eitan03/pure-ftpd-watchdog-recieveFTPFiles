@@ -8,11 +8,14 @@ def processFilePath(file_path: str):
     
 
 def getFileExtension(file_name: str):
-    if '.' in file_name:
-        return tuple(file_name.split('.', 1))
-    return file_name, None
+        if '.' in file_name:
+            return tuple(file_name.split('.', 1))
+        return file_name, None
 
 def getFilePartIdx(file_name: str):
-    file_part = file_name.rsplit('_', 1)[1]
-    file_part = 0 if file_part == 'a' else 1
-    return file_name[:-2], file_part
+    try:
+        file_part = file_name.rsplit('_', 1)[1]
+        file_part = 0 if file_part == 'a' else 1
+        return file_name[:-2], file_part
+    except:
+        raise ValueError(f'could not parse file part index! in file \'{file_name}\'')
