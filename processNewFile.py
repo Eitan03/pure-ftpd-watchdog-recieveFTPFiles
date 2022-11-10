@@ -6,7 +6,7 @@ from types import FunctionType
 from config import AMOUNT_OF_FILE_PARTS, MY_IP, REDIS_IMAGES_PROCESSED_NAME
 
 
-def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactory, loggerFactory,sendFile: FunctionType):
+def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactory, loggerFactory, sendFile: FunctionType):
     """_summary_
 
     Args:

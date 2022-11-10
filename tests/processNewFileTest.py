@@ -9,8 +9,6 @@ class test_processNewFile(unittest.TestCase):
 	def test_createEmptyProcessNewFile(self):
 		createEmptyProcessNewFile()
 	
-	# TODO: c
-
 	def test_processNewFile_cehck_saved_type_and_file_to_redis(self):
 
 		file_name = 'file'

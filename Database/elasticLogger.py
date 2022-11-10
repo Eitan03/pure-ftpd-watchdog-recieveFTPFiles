@@ -1,6 +1,8 @@
 from elasticsearch import Elasticsearch
 
-class elasticLogger():
+from Database.Logger import Logger
+
+class elasticLogger(Logger):
     def __init__(self, host: str):
         self.__elasticsearch = Elasticsearch(host)
 

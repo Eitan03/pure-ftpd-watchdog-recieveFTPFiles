@@ -30,4 +30,4 @@ class NewFileEventHandler(FileSystemEventHandler):
     
     def on_closed(self, event):
         self.onNewFileFunc(event.src_path)
-        return super().on_created(event)
+        return super().on_closed(event)

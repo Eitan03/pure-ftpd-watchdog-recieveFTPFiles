@@ -1,7 +1,9 @@
 import redis
 
+from Database.Database import Databse
 
-class RedisDB():
+
+class RedisDB(Databse):
     def __init__(self):
         self.__redis = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
