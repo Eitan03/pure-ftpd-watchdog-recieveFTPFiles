@@ -1,5 +1,5 @@
 from Communication.LocalJSONCommunicator import LocalJSONCommunicator
-from config import JSON_LOGS_PATH
+from config import config
 
 def createLocalJSONCommunicator():
-	return LocalJSONCommunicator(JSON_LOGS_PATH)
+	return LocalJSONCommunicator(config['JSON_LOGS_PATH'])

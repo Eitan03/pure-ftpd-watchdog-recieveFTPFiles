@@ -3,7 +3,7 @@ import logging
 import requests
 from os import remove as deleteFile
 
-from config import MY_IP, SERVER_NAME
+from config import config
 
 logger = logging.getLogger('')
 
@@ -15,7 +15,7 @@ def sendFileToServer(file_name, communicator, *file_parts_path):
             with open(part_path, 'rb') as f:
                     file_parts.append(('fileParts', f.read()))
 
-        res = requests.post(SERVER_NAME, data={ "fileName": file_name}, files=file_parts)
+        res = requests.post(config['SERVER_NAME'], data={ "fileName": file_name}, files=file_parts)
         
         for file in file_parts_path:
             deleteFile(file)

@@ -1,7 +1,7 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
 from time import sleep
-from config import MY_IP
+from config import config
 
 log = logging.getLogger('logger')
 log.setLevel(logging.DEBUG)

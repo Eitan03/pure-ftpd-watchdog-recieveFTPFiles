@@ -4,7 +4,7 @@ import traceback
 
 from Utils.FileNameUtilFunctions import processFilePath
 from SendFileToServer import sendFileToServer
-from config import SEC_BEFORE_FILE_EXPIRATION
+from config import config
 from multiprocessFunctions.createLocalJSONCommunicator import createLocalJSONCommunicator
 from multiprocessFunctions.fileExpired import fileExpired
 from processNewFile import processNewFile as processNewFileSync
@@ -17,7 +17,7 @@ def onExpiration(processFile_output):
     file_name, did_sent_to_server = processFile_output
     if (not did_sent_to_server):
         logger.info(f'started timer for {file_name}')
-        threading.Timer(SEC_BEFORE_FILE_EXPIRATION, fileExpired, [file_name, RedisDB]).start()
+        threading.Timer(config['SEC_BEFORE_FILE_EXPIRATION'], fileExpired, [file_name, RedisDB]).start()
 
 def onError(e: Exception):
     logger.error(f'got error in process! {e}')

@@ -5,7 +5,7 @@ from  tests.Mocks.DatabaseMock import createDatabaseMock
 
 import os
 from onFileExpiration import fileExpired
-from config import AMOUNT_OF_FILE_PARTS
+from config import config
 # def	fileExpired(file_name: str,	DatabaseFactory):
 
 class onFileExpirationTest(unittest.TestCase):
@@ -37,13 +37,13 @@ class onFileExpirationTest(unittest.TestCase):
 			'getHash': Mock(return_value=dict([(str(i), files_path + str(i)) for i in range(5)])),
 		})
 
-		for i in range(AMOUNT_OF_FILE_PARTS):
+		for i in range(config['AMOUNT_OF_FILE_PARTS']):
 			file_path = files_path + str(i)
 			with open(file_path, 'w') as f:
 				f.write('123')
 
 		fileExpired(file_name, lambda: db)
 
-		for i in range(AMOUNT_OF_FILE_PARTS):
+		for i in range(config['AMOUNT_OF_FILE_PARTS']):
 			if os.path.isfile(files_path + str(i)):
 				self.fail(f'file {files_path + str(i)} exists')

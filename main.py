@@ -5,7 +5,7 @@ from os import scandir, path
 from Communication.Logger import initLogger
 from Communication.RedisDB import RedisDB
 from NewFileEventListener import NewFileListener
-from config import FTP_IMAGES_PATH
+from config import config
 from multiprocessFunctions.processNewFile import processNewFile
 
 
@@ -17,17 +17,17 @@ if  __name__ == "__main__":
 
 
     logger = logging.getLogger('')
-    for entry in scandir(FTP_IMAGES_PATH):
+    for entry in scandir(config['FTP_IMAGES_PATH']):
         if entry.is_file():
             logger.info(f'found file {entry.name}, preprocessing it')
-            processNewFile(path.join(FTP_IMAGES_PATH, entry.name))
+            processNewFile(path.join(config['FTP_IMAGES_PATH'], entry.name))
         else:
             logger.info(f"WARNING! an object that isnt a file was found in the listenning dir! {entry.name}")
 
-    fileListener = NewFileListener(FTP_IMAGES_PATH, processNewFile)
+    fileListener = NewFileListener(config['FTP_IMAGES_PATH'], processNewFile)
 
     fileListener.start_listenning()
-    logger.info(f"started listenning to folder {FTP_IMAGES_PATH}")
+    logger.info(f"started listenning to folder {config['FTP_IMAGES_PATH']}")
     try:
         while True:
             time.sleep(1)
