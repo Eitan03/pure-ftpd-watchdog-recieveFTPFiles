@@ -8,7 +8,7 @@ log.setLevel(logging.DEBUG)
 
 jsonFormatter = logging.Formatter(
 	'{ \"@timestamp\": \"%(asctime)s\", \"level\": \"%(levelname)s\", \"message\": \"%(message)s\"' + 
-		', \"host\": \"' + MY_IP + '\" }'
+		', \"host\": \"' + config['MY_IP'] + '\" }'
 	, datefmt='%Y-%m-%dT%H:%M:%SZ'
 	) 
 

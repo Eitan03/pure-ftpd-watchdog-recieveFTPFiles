@@ -31,7 +31,7 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
     try:
         logger.info(f'got new file {file_path}')
         communicator.log('received-file-parts',
-           { 'fileName': file_path, 'receiver': MY_IP})
+           { 'fileName': file_path, 'receiver': config['MY_IP']})
     except Exception as e:
         logger.error(f'got an error: {e}')
         logger.info(f'got an error: {e}', exc_info=True)
