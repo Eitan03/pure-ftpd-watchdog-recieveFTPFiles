@@ -25,6 +25,8 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
     Returns:
         file_name, didSendFile
     """
+    AMOUNT_OF_FILE_PARTS = config['AMOUNT_OF_FILE_PARTS']
+    
     db = DatabaseFactory()
     communicator = communicatorFactory()
 
@@ -44,7 +46,7 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
     # maybe by openning and closing the file so a watchdog event is triggered
 
     try:
-        if (not db.exists(file_name)) or (int(db.getHashValue(file_name, 'amount_of_parts')) < (config['AMOUNT_OF_FILE_PARTS'] - 1)):
+        if (not db.exists(file_name)) or (int(db.getHashValue(file_name, 'amount_of_parts')) < (AMOUNT_OF_FILE_PARTS - 1)):
             if file_type != None:
                 db.setHashValue(file_name, 'type', file_type)
 
@@ -58,7 +60,9 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
 
             file_data[str(file_part_idx)] = file_path
 
-            sendFile( file_name + "." + file_type, communicator, *[file_data[str(i)] for i in range(config['AMOUNT_OF_FILE_PARTS'])])
+            file_data_arr = [file_data[str(i)] for i in range(AMOUNT_OF_FILE_PARTS)]
+
+            sendFile( file_name + "." + file_type, communicator, file_data_arr)
             db.delete(file_name)
             return file_name, True
     finally:
