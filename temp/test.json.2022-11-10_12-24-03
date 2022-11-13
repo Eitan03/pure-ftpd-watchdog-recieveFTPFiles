@@ -1,0 +1,2 @@
+{ "@timestamp": "2022-11-10T12:24:03Z", "level": "WARNING", "message": "this is a warning", "host": "me" }
+{ "@timestamp": "2022-11-10T12:24:03Z", "level": "ERROR", "message": "this is a error!", "host": "me" }
