@@ -62,7 +62,7 @@ def processNewFile(file_path: str, processFileName: FunctionType, DatabaseFactor
 
             file_data_arr = [file_data[str(i)] for i in range(AMOUNT_OF_FILE_PARTS)]
 
-            sendFile( file_name + "." + file_type, communicator, file_data_arr)
+            sendFile( file_name + "." + file_type, communicator, *file_data_arr)
             db.delete(file_name)
             return file_name, True
     finally:
